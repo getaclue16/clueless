@@ -6,14 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * Main class for the Clueless application.
  */
+@SuppressWarnings("checkstyle:hideutilityclassconstructor")
 @SpringBootApplication
 public class Application {
-
-    /**
-     * Hide utility class constructor.
-     */
-    private Application() {
-    }
 
     /**
      * Main entry point for the application.

@@ -1,7 +1,7 @@
 #Get a Clue
 
 ##Build
-* Build the project using the command `mvn clean package`
+* Build the project using the command `mvn clean verify`
 * Create project reports using the command `mvn clean site`
 
 ##Run

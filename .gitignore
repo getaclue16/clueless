@@ -1,1 +1,10 @@
+# Eclipse files
+.classpath
+.project
+.settings/
+
+# Maven build target
 target/
+
+# Embedded Tomcat working files
+tomcat/

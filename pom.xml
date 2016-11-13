@@ -113,7 +113,7 @@
                 <version>3.0.4</version>
                 <executions>
                     <execution>
-                        <phase>verify</phase>
+                        <phase>validate</phase>
                         <configuration>
                             <effort>Max</effort>
                             <threshold>Low</threshold>
@@ -131,7 +131,7 @@
                 <version>2.17</version>
                 <executions>
                     <execution>
-                        <phase>verify</phase>
+                        <phase>validate</phase>
                         <configuration>
                             <configLocation>src/test/resources/checkstyle.xml</configLocation>
                             <encoding>UTF-8</encoding>

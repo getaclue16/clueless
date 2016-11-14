@@ -1,17 +1,17 @@
 package getaclue.domain;
 
-import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 
 /**
  * The solution to the game.
  */
-@Entity
-public final class Solution extends AbstractPersistable<Long> {
-
-    private static final long serialVersionUID = 1396957259572492576L;
+@Embeddable
+public final class Solution {
 
     @NotNull
     private Guest guest;
@@ -97,6 +97,24 @@ public final class Solution extends AbstractPersistable<Long> {
      */
     public void setRoom(final Room room) {
         this.room = room;
+    }
+
+    /**
+     * Generate a random solution.
+     *
+     * @return a random solution
+     */
+    public static Solution generateSolution() {
+        List<Guest> guests = Arrays.asList(Guest.values());
+        List<Weapon> weapons = Arrays.asList(Weapon.values());
+        List<Room> rooms = Arrays.asList(Room.values());
+
+        Collections.shuffle(guests);
+        Collections.shuffle(weapons);
+        Collections.shuffle(rooms);
+
+        Solution solution = new Solution(guests.get(0), weapons.get(0), rooms.get(0));
+        return solution;
     }
 
 }

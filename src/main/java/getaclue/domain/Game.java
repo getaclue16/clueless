@@ -2,11 +2,15 @@ package getaclue.domain;
 
 import java.util.List;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The complete representation of an active or completed game.
@@ -18,7 +22,7 @@ public final class Game extends AbstractPersistable<Long> {
 
     @NotNull
     private String name;
-    @NotNull
+    @Embedded
     private Solution solution;
     private Player activePlayer;
     @OneToMany
@@ -105,6 +109,13 @@ public final class Game extends AbstractPersistable<Long> {
      */
     public void setName(final String name) {
         this.name = name;
+    }
+
+    @Override
+    @JsonIgnore
+    @Transient
+    public boolean isNew() {
+        return getId() == null;
     }
 
 }

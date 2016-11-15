@@ -2,24 +2,23 @@ package getaclue.domain;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 /**
  * A player in a game.
  */
 @Entity
-public final class Player extends AbstractPersistable<Long> {
+public final class Player extends PersistableGameObject {
 
     private static final long serialVersionUID = -7546020484507317449L;
 
     @NotNull
     private String username;
     private Guest guest;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Card> cards;
     private Location currentLocation;
     private boolean forcedToMove = false;

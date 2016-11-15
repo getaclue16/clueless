@@ -3,13 +3,11 @@ package getaclue.domain;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
 /**
  * A card in the game.
  */
 @Entity
-public final class Card extends AbstractPersistable<Long> {
+public final class Card extends PersistableGameObject {
 
     private static final long serialVersionUID = -2305395887705384349L;
 

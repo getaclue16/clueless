@@ -53,7 +53,8 @@ public class GameControllerTest {
     }
 
     /**
-     * Test method for {@link GameController#createGame(String)}.
+     * Test method for
+     * {@link GameController#createGame(String, java.security.Principal)}.
      *
      * @throws Exception
      */

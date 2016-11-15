@@ -8,14 +8,12 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
 /**
  * An action taken during a turn in the game.
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Action extends AbstractPersistable<Long> {
+public abstract class Action extends PersistableGameObject {
 
     private static final long serialVersionUID = -3260240631142109482L;
 

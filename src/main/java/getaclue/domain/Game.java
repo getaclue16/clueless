@@ -2,20 +2,16 @@ package getaclue.domain;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * The complete representation of an active or completed game.
  */
 @Entity
-public final class Game extends AbstractPersistable<Long> {
+public final class Game extends PersistableGameObject {
 
     private static final long serialVersionUID = 6196171277887994233L;
 
@@ -23,9 +19,9 @@ public final class Game extends AbstractPersistable<Long> {
     @Embedded
     private Solution solution;
     private Player activePlayer;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Turn> turns;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Player> players;
     private State state = State.NEW;
 
@@ -108,13 +104,6 @@ public final class Game extends AbstractPersistable<Long> {
      */
     public void setName(final String name) {
         this.name = name;
-    }
-
-    @Override
-    @JsonIgnore
-    @Transient
-    public boolean isNew() {
-        return getId() == null;
     }
 
     /**

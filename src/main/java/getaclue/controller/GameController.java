@@ -1,5 +1,7 @@
 package getaclue.controller;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import getaclue.dao.GameRepository;
 import getaclue.domain.Game;
+import getaclue.domain.Game.State;
 import getaclue.domain.Solution;
 
 /**
@@ -33,6 +36,16 @@ public final class GameController {
         game.setSolution(Solution.generateSolution());
         gameRepository.save(game);
         return game;
+    }
+
+    /**
+     * Get a list of all open games.
+     *
+     * @return a list of all open games
+     */
+    @RequestMapping("/open")
+    public Collection<Game> openGames() {
+        return gameRepository.findByState(State.NEW);
     }
 
 }

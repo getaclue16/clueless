@@ -6,7 +6,6 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
@@ -20,7 +19,6 @@ public final class Game extends AbstractPersistable<Long> {
 
     private static final long serialVersionUID = 6196171277887994233L;
 
-    @NotNull
     private String name;
     @Embedded
     private Solution solution;
@@ -29,6 +27,7 @@ public final class Game extends AbstractPersistable<Long> {
     private List<Turn> turns;
     @OneToMany
     private List<Player> players;
+    private State state = State.NEW;
 
     /**
      * Create a game.
@@ -116,6 +115,39 @@ public final class Game extends AbstractPersistable<Long> {
     @Transient
     public boolean isNew() {
         return getId() == null;
+    }
+
+    /**
+     * @return the state
+     */
+    public State getState() {
+        return state;
+    }
+
+    /**
+     * @param state
+     *            the state to set
+     */
+    public void setState(final State state) {
+        this.state = state;
+    }
+
+    /**
+     * The state of a game.
+     */
+    public enum State {
+        /**
+         * Game is new and has not started, users can join.
+         */
+        NEW,
+        /**
+         * Game has started, no new users can join.
+         */
+        IN_PROGRESS,
+        /**
+         * The game is complete, no further actions can be taken.
+         */
+        COMPLETE;
     }
 
 }

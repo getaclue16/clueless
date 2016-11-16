@@ -2,18 +2,14 @@ package getaclue.controller;
 
 import java.security.Principal;
 import java.util.Collection;
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import getaclue.dao.GameRepository;
 import getaclue.domain.Game;
-import getaclue.domain.Game.State;
-import getaclue.domain.Player;
-import getaclue.domain.Solution;
+import getaclue.service.GameService;
 
 /**
  * REST controller for game actions.
@@ -23,7 +19,7 @@ import getaclue.domain.Solution;
 public final class GameController {
 
     @Autowired
-    private GameRepository gameRepository;
+    private GameService gameService;
 
     /**
      * Create a new game.
@@ -37,14 +33,7 @@ public final class GameController {
     @RequestMapping("/create")
     public Game createGame(@RequestParam(value = "name", required = false) final String name,
             final Principal principal) {
-        Game game = new Game();
-        game.setName(name);
-        game.setSolution(Solution.generateSolution());
-
-        Player player = new Player(principal.getName());
-        game.setPlayers(Collections.singletonList(player));
-
-        gameRepository.save(game);
+        Game game = gameService.newGame(name, principal.getName());
         return game;
     }
 
@@ -55,7 +44,7 @@ public final class GameController {
      */
     @RequestMapping("/open")
     public Collection<Game> openGames() {
-        return gameRepository.findByState(State.NEW);
+        return gameService.getNewGames();
     }
 
 }

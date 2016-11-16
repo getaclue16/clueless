@@ -1,7 +1,8 @@
 package getaclue.controller;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -67,13 +68,11 @@ public class GameControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print()).andExpect(status().isOk()).andReturn();
 
-        Game game = objectMapper.readerFor(Game.class)
-                .readValue(result.getResponse().getContentAsString());
+        String content = result.getResponse().getContentAsString();
+        assertFalse(content.contains("solution"));
+        Game game = objectMapper.readerFor(Game.class).readValue(content);
         assertEquals(gameName, game.getName());
-        assertNotNull(game.getSolution());
-        assertNotNull(game.getSolution().getGuest());
-        assertNotNull(game.getSolution().getRoom());
-        assertNotNull(game.getSolution().getWeapon());
+        assertNull(game.getSolution());
         assertTrue(game.getState().equals(State.NEW));
 
         mvc.perform(get("/game/create").param("name", gameName).accept(MediaType.APPLICATION_JSON))

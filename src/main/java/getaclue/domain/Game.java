@@ -7,6 +7,8 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * The complete representation of an active or completed game.
  */
@@ -17,6 +19,7 @@ public final class Game extends PersistableGameObject {
 
     private String name;
     @Embedded
+    @JsonIgnore
     private Solution solution;
     private Player activePlayer;
     @OneToMany(cascade = CascadeType.ALL)

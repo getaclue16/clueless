@@ -29,7 +29,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import getaclue.domain.Game;
 import getaclue.domain.Game.State;
+import getaclue.domain.Guest;
 import getaclue.service.GameService;
+import getaclue.service.GameServiceImpl.GameNotFoundException;
+import getaclue.service.GameServiceImpl.InvalidGameStateException;
 
 /**
  * Test class for {@link GameController}.
@@ -47,6 +50,8 @@ public class GameControllerTest {
     private MockMvc mvc;
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    private final String player1 = "player1";
 
     /**
      * Setup method to run before each test.
@@ -91,22 +96,14 @@ public class GameControllerTest {
     @Test
     @WithMockUser
     public void testOpenGames() throws Exception {
-        String player1 = "player1";
         // Make an open game
         Long openGameId = gameService.newGame(null, player1).getId();
 
         // Make a full game
-        Long fullGameId = gameService.newGame(null, player1).getId();
-        gameService.joinGame(fullGameId, "player2");
-        gameService.joinGame(fullGameId, "player3");
-        gameService.joinGame(fullGameId, "player4");
-        gameService.joinGame(fullGameId, "player5");
-        gameService.joinGame(fullGameId, "player6");
+        Long fullGameId = getFullGame().getId();
 
-        // TODO: Make a game that is started
-        // Long startedGameId = gameService.newGame(null, player1).getId();
-        // gameService.joinGame(startedGameId, "player2");
-        // gameService.startGame(startedGameId);
+        // Make a game that is started
+        Long startedGameId = getStartedGame().getId();
 
         // Get the list of open games
         MvcResult result = mvc.perform(get("/game/open").accept(MediaType.APPLICATION_JSON))
@@ -120,7 +117,7 @@ public class GameControllerTest {
         boolean found = false;
         for (Game game : games) {
             assertFalse(fullGameId.equals(game.getId()));
-            // assertFalse(startedGameId.equals(game.getId()));
+            assertFalse(startedGameId.equals(game.getId()));
             if (openGameId.equals(game.getId())) {
                 found = true;
             }
@@ -137,7 +134,6 @@ public class GameControllerTest {
     @Test
     @WithMockUser
     public void testJoinGame() throws Exception {
-        String player1 = "player1";
         Game game = gameService.newGame(null, player1);
 
         // Join the game
@@ -156,12 +152,7 @@ public class GameControllerTest {
                 .andExpect(content().string("Unable to join game"));
 
         // Attempt to join a full game
-        game = gameService.newGame(null, player1);
-        gameService.joinGame(game.getId(), "player2");
-        gameService.joinGame(game.getId(), "player3");
-        gameService.joinGame(game.getId(), "player4");
-        gameService.joinGame(game.getId(), "player5");
-        gameService.joinGame(game.getId(), "player6");
+        game = getFullGame();
         mvc.perform(get("/game/join").param("gameid", game.getId().toString())
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
                 .andExpect(content().string("Unable to join game"));
@@ -170,8 +161,77 @@ public class GameControllerTest {
         mvc.perform(get("/game/join").param("gameid", "999").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest()).andExpect(content().string("Invalid game id"));
 
-        // TODO: Attempt to join a game that has already started
-        // Can't do this until we add the ability to start a game
+        // Attempt to join a game that has already started
+        game = getStartedGame();
+        mvc.perform(get("/game/join").param("gameid", game.getId().toString())
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
+                .andExpect(content().string("Unable to join game"));
+    }
+
+    /**
+     * Test method for
+     * {@link GameController#startGame(long, java.security.Principal)}.
+     *
+     * @throws Exception
+     */
+    @Test
+    @WithMockUser
+    public void testStartGame() throws Exception {
+        // Try to start the game with only one player
+        Game game = gameService.newGame(null, "user");
+        mvc.perform(get("/game/start").param("gameid", game.getId().toString())
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
+                .andExpect(content().string("Unable to start game"));
+
+        // Add a second player and successfully start the game
+        gameService.joinGame(game.getId(), player1);
+        MvcResult result = mvc.perform(get("/game/start").param("gameid", game.getId().toString())
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+        Game startedGame = objectMapper.readerFor(Game.class)
+                .readValue(result.getResponse().getContentAsString());
+        assertEquals(game.getId(), startedGame.getId());
+        // The game was started
+        assertEquals(State.IN_PROGRESS, startedGame.getState());
+        // The players were assigned guests
+        assertEquals(2, startedGame.getPlayers().size());
+        assertEquals(Guest.SCARLET, startedGame.getPlayers().get(0).getGuest());
+        assertNotNull(startedGame.getPlayers().get(1).getGuest());
+        assertFalse(startedGame.getPlayers().get(1).getGuest().equals(Guest.SCARLET));
+        // The players were delt cards
+        assertEquals(11, startedGame.getPlayers().get(0).getCards().size());
+        assertEquals(10, startedGame.getPlayers().get(1).getCards().size());
+
+        // Try to start the game again, even though it is already started
+        mvc.perform(get("/game/start").param("gameid", game.getId().toString())
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
+                .andExpect(content().string("Unable to start game"));
+
+        // Try to start an invalid game id
+        mvc.perform(get("/game/start").param("gameid", "999").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest()).andExpect(content().string("Invalid game id"));
+
+        // Try to start a game created by someone else
+        mvc.perform(get("/game/start").param("gameid", getFullGame().getId().toString())
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
+                .andExpect(content().string("Unable to start game"));
+
+    }
+
+    private Game getFullGame() throws GameNotFoundException, InvalidGameStateException {
+        Game game = gameService.newGame(null, player1);
+        gameService.joinGame(game.getId(), "player2");
+        gameService.joinGame(game.getId(), "player3");
+        gameService.joinGame(game.getId(), "player4");
+        gameService.joinGame(game.getId(), "player5");
+        gameService.joinGame(game.getId(), "player6");
+        return game;
+    }
+
+    private Game getStartedGame() throws GameNotFoundException, InvalidGameStateException {
+        Game game = gameService.newGame(null, player1);
+        gameService.joinGame(game.getId(), "player2");
+        gameService.startGame(game.getId(), player1);
+        return game;
     }
 
 }

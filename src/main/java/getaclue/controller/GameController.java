@@ -73,11 +73,37 @@ public final class GameController {
         try {
             game = gameService.joinGame(gameId, principal.getName());
         } catch (GameNotFoundException e) {
-            log.error("User requested invalid game id", e);
+            log.error("User requested to join invalid game id", e);
             return new ResponseEntity<String>("Invalid game id", HttpStatus.BAD_REQUEST);
         } catch (InvalidGameStateException e) {
             log.warn("User could not join game", e);
             return new ResponseEntity<String>("Unable to join game", HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<Game>(game, HttpStatus.OK);
+    }
+
+    /**
+     * Start a game.
+     *
+     * @param gameId
+     *            the id of the game to start
+     * @param principal
+     *            the principal of the user requesting to start
+     * @return the game that has been started or an error message if the action
+     *         failed
+     */
+    @RequestMapping("/start")
+    public ResponseEntity<?> startGame(@RequestParam(value = "gameid") final long gameId,
+            final Principal principal) {
+        Game game;
+        try {
+            game = gameService.startGame(gameId, principal.getName());
+        } catch (GameNotFoundException e) {
+            log.error("User requested to start invalid game id", e);
+            return new ResponseEntity<String>("Invalid game id", HttpStatus.BAD_REQUEST);
+        } catch (InvalidGameStateException e) {
+            log.warn("User could not start game", e);
+            return new ResponseEntity<String>("Unable to start game", HttpStatus.CONFLICT);
         }
         return new ResponseEntity<Game>(game, HttpStatus.OK);
     }

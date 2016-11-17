@@ -2,10 +2,10 @@ package getaclue.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import getaclue.domain.Game;
 import getaclue.domain.Game.State;
+import getaclue.service.GameService;
 
 /**
  * Test class for {@link GameController}.
@@ -39,6 +40,9 @@ public class GameControllerTest {
 
     @Autowired
     private WebApplicationContext wac;
+
+    @Autowired
+    private GameService gameService;
 
     private MockMvc mvc;
 
@@ -66,7 +70,7 @@ public class GameControllerTest {
         MvcResult result = mvc
                 .perform(get("/game/create").param("name", gameName)
                         .accept(MediaType.APPLICATION_JSON))
-                .andDo(print()).andExpect(status().isOk()).andReturn();
+                .andExpect(status().isCreated()).andReturn();
 
         String content = result.getResponse().getContentAsString();
         assertFalse(content.contains("solution"));
@@ -76,7 +80,7 @@ public class GameControllerTest {
         assertTrue(game.getState().equals(State.NEW));
 
         mvc.perform(get("/game/create").param("name", gameName).accept(MediaType.APPLICATION_JSON))
-                .andDo(print()).andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     /**
@@ -87,13 +91,87 @@ public class GameControllerTest {
     @Test
     @WithMockUser
     public void testOpenGames() throws Exception {
-        mvc.perform(get("/game/create"));
+        String player1 = "player1";
+        // Make an open game
+        Long openGameId = gameService.newGame(null, player1).getId();
+
+        // Make a full game
+        Long fullGameId = gameService.newGame(null, player1).getId();
+        gameService.joinGame(fullGameId, "player2");
+        gameService.joinGame(fullGameId, "player3");
+        gameService.joinGame(fullGameId, "player4");
+        gameService.joinGame(fullGameId, "player5");
+        gameService.joinGame(fullGameId, "player6");
+
+        // TODO: Make a game that is started
+        // Long startedGameId = gameService.newGame(null, player1).getId();
+        // gameService.joinGame(startedGameId, "player2");
+        // gameService.startGame(startedGameId);
+
+        // Get the list of open games
         MvcResult result = mvc.perform(get("/game/open").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
         List<Game> games = objectMapper.readValue(result.getResponse().getContentAsString(),
                 new TypeReference<List<Game>>() {
                 });
         assertTrue(games.size() >= 1);
+
+        // Make sure we only get the new, not full game
+        boolean found = false;
+        for (Game game : games) {
+            assertFalse(fullGameId.equals(game.getId()));
+            // assertFalse(startedGameId.equals(game.getId()));
+            if (openGameId.equals(game.getId())) {
+                found = true;
+            }
+        }
+        assertTrue(found);
+    }
+
+    /**
+     * Test method for
+     * {@link GameController#joinGame(long, java.security.Principal)}.
+     *
+     * @throws Exception
+     */
+    @Test
+    @WithMockUser
+    public void testJoinGame() throws Exception {
+        String player1 = "player1";
+        Game game = gameService.newGame(null, player1);
+
+        // Join the game
+        MvcResult result = mvc.perform(get("/game/join").param("gameid", game.getId().toString())
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+        Game joinedGame = objectMapper.readerFor(Game.class)
+                .readValue(result.getResponse().getContentAsString());
+        assertEquals(game.getId(), joinedGame.getId());
+        assertEquals(2, joinedGame.getPlayers().size());
+        assertEquals(player1, joinedGame.getPlayers().get(0).getUsername());
+        assertEquals("user", joinedGame.getPlayers().get(1).getUsername());
+
+        // Attempt to join the same game again
+        mvc.perform(get("/game/join").param("gameid", game.getId().toString())
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
+                .andExpect(content().string("Unable to join game"));
+
+        // Attempt to join a full game
+        game = gameService.newGame(null, player1);
+        gameService.joinGame(game.getId(), "player2");
+        gameService.joinGame(game.getId(), "player3");
+        gameService.joinGame(game.getId(), "player4");
+        gameService.joinGame(game.getId(), "player5");
+        gameService.joinGame(game.getId(), "player6");
+        mvc.perform(get("/game/join").param("gameid", game.getId().toString())
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
+                .andExpect(content().string("Unable to join game"));
+
+        // Attempt to join invalid game id
+        mvc.perform(get("/game/join").param("gameid", "999").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest()).andExpect(content().string("Invalid game id"));
+
+        // TODO: Attempt to join a game that has already started
+        // Can't do this until we add the ability to start a game
     }
 
 }

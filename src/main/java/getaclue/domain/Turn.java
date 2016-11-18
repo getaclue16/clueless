@@ -4,8 +4,9 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotNull;
 
 /**
  * A turn in the game.
@@ -15,7 +16,8 @@ public final class Turn extends PersistableGameObject {
 
     private static final long serialVersionUID = -66086761512365387L;
 
-    @NotNull
+    @ManyToOne
+    @JoinColumn
     private Player player;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Action> actions;

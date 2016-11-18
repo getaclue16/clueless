@@ -19,6 +19,7 @@ import getaclue.domain.Game.State;
 import getaclue.domain.Guest;
 import getaclue.domain.Player;
 import getaclue.domain.Solution;
+import getaclue.domain.Turn;
 
 /**
  * Implementation of the game service.
@@ -130,6 +131,10 @@ public class GameServiceImpl implements GameService {
         for (int i = 0; i < deck.size(); i++) {
             players.get(i % players.size()).getCards().add(deck.get(i));
         }
+
+        // Set the active player and start their turn
+        game.setActivePlayer(players.get(0));
+        game.getTurns().add(new Turn(players.get(0)));
 
         // Start the game
         game.setState(State.IN_PROGRESS);

@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,6 +23,8 @@ public final class Game extends PersistableGameObject {
     @Embedded
     @JsonIgnore
     private Solution solution;
+    @ManyToOne
+    @JoinColumn
     private Player activePlayer;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Turn> turns;

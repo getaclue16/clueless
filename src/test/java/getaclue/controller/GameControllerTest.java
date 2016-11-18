@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import getaclue.domain.Game;
 import getaclue.domain.Game.State;
 import getaclue.domain.Guest;
+import getaclue.domain.Player;
 import getaclue.service.GameService;
 import getaclue.service.GameServiceImpl.GameNotFoundException;
 import getaclue.service.GameServiceImpl.InvalidGameStateException;
@@ -194,12 +195,16 @@ public class GameControllerTest {
         assertEquals(State.IN_PROGRESS, startedGame.getState());
         // The players were assigned guests
         assertEquals(2, startedGame.getPlayers().size());
-        assertEquals(Guest.SCARLET, startedGame.getPlayers().get(0).getGuest());
+        Player firstPlayer = startedGame.getPlayers().get(0);
+        assertEquals(Guest.SCARLET, firstPlayer.getGuest());
         assertNotNull(startedGame.getPlayers().get(1).getGuest());
         assertFalse(startedGame.getPlayers().get(1).getGuest().equals(Guest.SCARLET));
         // The players were delt cards
-        assertEquals(11, startedGame.getPlayers().get(0).getCards().size());
+        assertEquals(11, firstPlayer.getCards().size());
         assertEquals(10, startedGame.getPlayers().get(1).getCards().size());
+        // The first turn has started
+        assertEquals(firstPlayer, startedGame.getActivePlayer());
+        assertEquals(firstPlayer, startedGame.getTurns().get(0).getPlayer());
 
         // Try to start the game again, even though it is already started
         mvc.perform(get("/game/start").param("gameid", game.getId().toString())

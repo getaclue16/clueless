@@ -1,7 +1,5 @@
 package getaclue.domain;
 
-import java.time.ZonedDateTime;
-
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
@@ -23,21 +21,6 @@ public final class Move extends Action {
      * Default constructor.
      */
     public Move() {
-    }
-
-    /**
-     * @param timestamp
-     *            the date and time this action occurred
-     * @param fromLocation
-     *            the location where the player moved from
-     * @param toLocation
-     *            the location where the player moved to
-     */
-    public Move(final ZonedDateTime timestamp, final Location fromLocation,
-            final Location toLocation) {
-        super(timestamp);
-        this.fromLocation = fromLocation;
-        this.toLocation = toLocation;
     }
 
     /**

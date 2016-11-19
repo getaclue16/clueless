@@ -51,11 +51,17 @@ public final class Player extends PersistableGameObject {
     }
 
     /**
+     * Set the player's assigned guest. This also sets the player's location as
+     * the guest's assigned starting location.
+     *
      * @param guest
      *            the guest to set
      */
     public void setGuest(final Guest guest) {
         this.guest = guest;
+        if (guest != null) {
+            this.currentLocation = guest.getStartLocation();
+        }
     }
 
     /**

@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * A player in a game.
  */
@@ -19,6 +21,7 @@ public final class Player extends PersistableGameObject {
     private String username;
     private Guest guest;
     @OneToMany(cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Card> cards;
     private Location currentLocation;
     private boolean forcedToMove = false;

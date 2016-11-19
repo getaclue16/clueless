@@ -2,7 +2,8 @@ package getaclue.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -199,9 +200,11 @@ public class GameControllerTest {
         assertEquals(Guest.SCARLET, firstPlayer.getGuest());
         assertNotNull(startedGame.getPlayers().get(1).getGuest());
         assertFalse(startedGame.getPlayers().get(1).getGuest().equals(Guest.SCARLET));
-        // The players were delt cards
-        assertEquals(11, firstPlayer.getCards().size());
-        assertEquals(10, startedGame.getPlayers().get(1).getCards().size());
+        // Make sure the solution wasn't returned with the game state
+        assertNull(startedGame.getSolution());
+        // Make sure the player's cards weren't returned with the game state
+        assertNull(firstPlayer.getCards());
+        assertNull(startedGame.getPlayers().get(1).getCards());
         // The first turn has started
         assertEquals(firstPlayer, startedGame.getActivePlayer());
         assertEquals(firstPlayer, startedGame.getTurns().get(0).getPlayer());

@@ -69,7 +69,7 @@ public class GameServiceImpl implements GameService {
         // Make sure the game exists
         Game game = gameRepository.findOne(gameId);
         if (game == null) {
-            throw new GameNotFoundException("Game not found");
+            throw new GameNotFoundException();
         }
         // Make sure the game has not started yet
         if (game.getState() != State.NEW) {
@@ -97,7 +97,7 @@ public class GameServiceImpl implements GameService {
         // Make sure the game exists
         Game game = gameRepository.findOne(gameId);
         if (game == null) {
-            throw new GameNotFoundException("Game not found");
+            throw new GameNotFoundException();
         }
         // Make sure the game hasn't already started
         if (game.getState() != State.NEW) {
@@ -142,43 +142,6 @@ public class GameServiceImpl implements GameService {
         // Save the state and return the game
         gameRepository.save(game);
         return game;
-    }
-
-    /**
-     * Exception thrown when the user requests an action against a game that
-     * doesn't exist in the repository.
-     */
-    public final class GameNotFoundException extends Exception {
-        /**
-         * Construct a new exception with the given message.
-         *
-         * @param message
-         *            the message
-         */
-        public GameNotFoundException(final String message) {
-            super(message);
-        }
-
-        private static final long serialVersionUID = 6746861657499037448L;
-    }
-
-    /**
-     * Exception thrown when the user requests an action against a game that is
-     * in the wrong state. For example, the user tries to join a game that is
-     * already in progress.
-     */
-    public final class InvalidGameStateException extends Exception {
-        /**
-         * Construct a new exception with the given message.
-         *
-         * @param message
-         *            the message
-         */
-        public InvalidGameStateException(final String message) {
-            super(message);
-        }
-
-        private static final long serialVersionUID = -3802312486434398731L;
     }
 
 }

@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import getaclue.domain.Game;
+import getaclue.service.GameNotFoundException;
 import getaclue.service.GameService;
-import getaclue.service.GameServiceImpl.GameNotFoundException;
-import getaclue.service.GameServiceImpl.InvalidGameStateException;
+import getaclue.service.InvalidGameStateException;
 
 /**
- * REST controller for game actions.
+ * REST controller for game setup.
  */
 @RestController
 @RequestMapping("/game")

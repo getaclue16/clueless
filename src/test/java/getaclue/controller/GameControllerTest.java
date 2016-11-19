@@ -32,9 +32,9 @@ import getaclue.domain.Game;
 import getaclue.domain.Game.State;
 import getaclue.domain.Guest;
 import getaclue.domain.Player;
+import getaclue.service.GameNotFoundException;
 import getaclue.service.GameService;
-import getaclue.service.GameServiceImpl.GameNotFoundException;
-import getaclue.service.GameServiceImpl.InvalidGameStateException;
+import getaclue.service.InvalidGameStateException;
 
 /**
  * Test class for {@link GameController}.

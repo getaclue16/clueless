@@ -3,8 +3,6 @@ package getaclue.service;
 import java.util.Collection;
 
 import getaclue.domain.Game;
-import getaclue.service.GameServiceImpl.GameNotFoundException;
-import getaclue.service.GameServiceImpl.InvalidGameStateException;
 
 /**
  * Service for managing games.

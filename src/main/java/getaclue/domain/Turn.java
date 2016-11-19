@@ -1,5 +1,6 @@
 package getaclue.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -20,7 +21,7 @@ public final class Turn extends PersistableGameObject {
     @JoinColumn
     private Player player;
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Action> actions;
+    private List<Action> actions = new ArrayList<>();
 
     /**
      * Create a turn.
@@ -51,6 +52,16 @@ public final class Turn extends PersistableGameObject {
      */
     public void setActions(final List<Action> actions) {
         this.actions = actions;
+    }
+
+    /**
+     * Add an action to the list of actions.
+     *
+     * @param action
+     *            the action to add
+     */
+    public void addAction(final Action action) {
+        actions.add(action);
     }
 
     /**

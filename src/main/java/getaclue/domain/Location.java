@@ -126,7 +126,7 @@ public final class Location extends PersistableGameObject {
             return false;
         }
         // Voids between halls
-        if (x % 2 == 1 && y % 2 == 1) {
+        if (x % 2 != 0 && y % 2 != 0) {
             return false;
         }
         return true;
@@ -142,7 +142,7 @@ public final class Location extends PersistableGameObject {
         if (!isOnGameBoard()) {
             return false;
         }
-        return (x + y) % 2 == 1;
+        return (x + y) % 2 != 0;
     }
 
     /**

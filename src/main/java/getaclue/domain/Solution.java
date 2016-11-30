@@ -11,7 +11,8 @@ import javax.validation.constraints.NotNull;
  * The solution to the game.
  */
 @Embeddable
-public final class Solution {
+public final class Solution extends PersistableGameObject {
+    private static final long serialVersionUID = 1922443575218280274L;
 
     @NotNull
     private Guest guest;

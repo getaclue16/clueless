@@ -61,7 +61,7 @@ public final class Card extends PersistableGameObject {
      *
      * @return the name of the card
      */
-    String getName() {
+    public String getName() {
         return name;
     }
 

@@ -14,9 +14,8 @@
         </sec:authorize>
         <sec:authorize access="isAuthenticated()">
             <form action="/logout" method="post">
-                <input type="hidden" name="${_csrf.parameterName}"
-                    value="${_csrf.token}" /> <input type="submit"
-                    value="Sign Out" />
+                <sec:csrfInput />
+                <input type="submit" value="Sign Out" />
             </form>
         </sec:authorize>
     </div>

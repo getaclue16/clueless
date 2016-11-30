@@ -145,6 +145,20 @@ public final class Location extends PersistableGameObject {
         return (x + y) % 2 == 1;
     }
 
+    /**
+     * Return the room that is at this location.
+     *
+     * @return the room at this location or null
+     */
+    public Room toRoom() {
+        for (Room room : Room.values()) {
+            if (room.getX() == x && room.getY() == y) {
+                return room;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return String.format("(%d,%d)", x, y);

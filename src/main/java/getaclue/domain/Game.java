@@ -30,6 +30,8 @@ public final class Game extends PersistableGameObject {
     private List<Turn> turns;
     @OneToMany(cascade = CascadeType.ALL)
     private List<Player> players;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<NonPlayer> nonPlayers;
     private State state = State.NEW;
 
     /**
@@ -96,6 +98,21 @@ public final class Game extends PersistableGameObject {
      */
     public void setPlayers(final List<Player> players) {
         this.players = players;
+    }
+
+    /**
+     * @return the nonPlayers
+     */
+    public List<NonPlayer> getNonPlayers() {
+        return nonPlayers;
+    }
+
+    /**
+     * @param nonPlayers
+     *            the nonPlayers to set
+     */
+    public void setNonPlayers(final List<NonPlayer> nonPlayers) {
+        this.nonPlayers = nonPlayers;
     }
 
     /**

@@ -17,6 +17,7 @@ import getaclue.domain.Card;
 import getaclue.domain.Game;
 import getaclue.domain.Game.State;
 import getaclue.domain.Guest;
+import getaclue.domain.NonPlayer;
 import getaclue.domain.Player;
 import getaclue.domain.Solution;
 import getaclue.domain.Turn;
@@ -122,7 +123,16 @@ public class GameServiceImpl implements GameService {
         // Next assign the rest
         Collections.shuffle(guests);
         for (int i = 1; i < players.size(); i++) {
-            players.get(i).setGuest(guests.get(i - 1));
+            players.get(i).setGuest(guests.remove(0));
+        }
+
+        // Remaining guests are recorded as non-players for display on the game
+        // board
+        List<NonPlayer> nonplayers = game.getNonPlayers();
+        while (guests.size() > 0) {
+            NonPlayer nonplayer = new NonPlayer();
+            nonplayer.setGuest(guests.remove(0));
+            nonplayers.add(nonplayer);
         }
 
         // Deal the cards

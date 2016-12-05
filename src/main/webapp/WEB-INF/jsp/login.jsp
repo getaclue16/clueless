@@ -3,28 +3,37 @@
     prefix="sec"%>
 
 <jsp:include page="head.jsp">
-    <jsp:param value="title" name="Clueless - Login" />
+    <jsp:param name="title" value="Login" />
 </jsp:include>
-<body>
+<div class="container">
     <c:if test="${param.error != null}">
         <div class="error">Invalid username or password</div>
     </c:if>
-    <form action="<c:url value="/login" var="actionUrl" />"
-        method="post">
+    <form class="form-horizontal"
+        action="<c:url value="/login" var="actionUrl" />" method="post">
         <sec:csrfInput />
-        <div>
-            <label> User Name : <input type="text"
-                name="username" />
-            </label>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="username">User
+                Name</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="username" type="text"
+                    name="username" autofocus="autofocus"
+                    required="required" />
+            </div>
         </div>
-        <div>
-            <label> Password: <input type="password"
-                name="password" />
-            </label>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="password">Password</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="password"
+                    type="password" name="password" required="required" />
+            </div>
         </div>
-        <div>
-            <input type="submit" value="Sign In" />
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Sign
+                    in</button>
+            </div>
         </div>
     </form>
-</body>
-</html>
+</div>
+<jsp:include page="foot.jsp" />

@@ -1,9 +1,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <jsp:include page="head.jsp">
-    <jsp:param name="title" value="Home" />
+    <jsp:param name="title" value="${game.name}" />
 </jsp:include>
-<div style="text-align: center;">
-    <table class="gameboard">
+<div class="text-center">
+    <table class="gameboard" data-gameid="${game.id}" id="gameboard">
         <tr>
             <td colspan="4">&nbsp;</td>
             <td class="start" id="startscarlet"><span>Miss
@@ -71,42 +72,58 @@
             <td colspan="2">&nbsp;</td>
         </tr>
     </table>
-
+    <div id="gamestatus" data-gamestate="${game.state}">
+        <h2>Game Status</h2>
+        <c:if test="${game.state == 'NEW'}">
+            Game has not started. There are currently ${fn:length(game.players)} players joined.
+            <c:if
+                test="${game.players[0].username == user && fn:length(game.players) >= 3}">
+                <div>
+                    <br />
+                    <button id="start-game">Start Game</button>
+                </div>
+            </c:if>
+        </c:if>
+        <c:if test="${game.state == 'IN_PROGRESS'}">
+            Game is in progress. It is <c:out
+                value="${game.activePlayer.guest.name}" />'s turn.
+        </c:if>
+    </div>
     <br />
     <div>
-        <div>
-            Move<br />
-            <button id="move-up">Up</button>
-            <br />
-            <button id="move-left">Left</button>
-            <button id="move-right">Right</button>
-            <br />
-            <button id="move-down">Down</button>
-            <br />
-            <button id="move-shortcut">Take Shortcut</button>
-        </div>
-        <div>
-            <br />
-            <button id="guess">Make Guess</button>
-        </div>
-        <div>
-            <br />
-            <button id="accuse">Accuse</button>
-        </div>
-        <div>
-            <br />
-            <button id="end-turn">End Turn</button>
-        </div>
+        <c:if test="${game.state == 'IN_PROGRESS'}">
+            <h2>Actions</h2>
+            <div>
+                <br />
+                <button id="guess">Make Guess</button>
+            </div>
+            <div>
+                <br />
+                <button id="accuse">Accuse</button>
+            </div>
+            <div>
+                <br />
+                <button id="end-turn">End Turn</button>
+            </div>
+        </c:if>
     </div>
 
     <div style="clear: both;">
-        Cards<br />
-        <div class="card card-white">Mrs. White</div>
-        <div class="card card-plum">Prof. Plum</div>
-        <div class="card card-hall">Hall</div>
-        <div class="card card-billiard">Billiard Room</div>
-        <div class="card card-rope">Rope</div>
-        <div class="card card-wrench">Wrench</div>
+        <c:if test="${game.state != 'NEW'}">
+            <h2>Your Cards</h2>
+            <c:forEach items="${game.players}" var="player">
+                <c:if test="${player.username == user}">
+                    <c:forEach items="${player.cards}" var="card">
+                        <div
+                            class="card card-<c:out value="${card.shortName}" />">
+                            <c:out value="${card.name}" />
+                        </div>
+                    </c:forEach>
+                </c:if>
+            </c:forEach>
+        </c:if>
     </div>
 </div>
+
+<script src="<c:url value="/resources/js/game.js" />"></script>
 <jsp:include page="foot.jsp" />

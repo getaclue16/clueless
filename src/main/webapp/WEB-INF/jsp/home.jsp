@@ -15,10 +15,26 @@
             user</a>
     </sec:authorize>
     <sec:authorize access="isAuthenticated()">
+        <div style="text-align: left;">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Creator</th>
+                        <th>Players</th>
+                    </tr>
+                </thead>
+                <tbody id="opengames"></tbody>
+            </table>
+        </div>
+        <input id="gamename" name="name" required="required" type="text" />
+        <button id="create-game">Create New Game</button>
+
         <form action="<c:url value="/logout" />" method="post">
             <sec:csrfInput />
             <input type="submit" value="Sign Out" />
         </form>
+        <script src="<c:url value="/resources/js/home.js" />"></script>
     </sec:authorize>
 </div>
 <jsp:include page="foot.jsp" />

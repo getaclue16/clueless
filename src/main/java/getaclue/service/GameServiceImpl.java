@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +21,10 @@ import getaclue.domain.Game.State;
 import getaclue.domain.Guest;
 import getaclue.domain.NonPlayer;
 import getaclue.domain.Player;
+import getaclue.domain.Room;
 import getaclue.domain.Solution;
 import getaclue.domain.Turn;
+import getaclue.domain.Weapon;
 
 /**
  * Implementation of the game service.
@@ -134,6 +138,15 @@ public class GameServiceImpl implements GameService {
             nonplayer.setGuest(guests.remove(0));
             nonplayers.add(nonplayer);
         }
+
+        // Place the weapons
+        Map<Weapon,Room> weaponLocations = new HashMap<>();
+        List<Room> rooms = new ArrayList<>(Arrays.asList(Room.values()));
+        Collections.shuffle(rooms);
+        for(int i = 0; i < Weapon.values().length; i++) {
+            weaponLocations.put(Weapon.values()[i], rooms.get(i));
+        }
+        game.setWeaponLocations(weaponLocations);
 
         // Deal the cards
         List<Card> deck = Card.newDeck();

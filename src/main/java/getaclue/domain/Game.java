@@ -1,6 +1,7 @@
 package getaclue.domain;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -32,6 +33,8 @@ public final class Game extends PersistableGameObject {
     private List<Player> players;
     @OneToMany(cascade = CascadeType.ALL)
     private List<NonPlayer> nonPlayers;
+    @Embedded
+    private Map<Weapon, Room> weaponLocations;
     private State state = State.NEW;
 
     /**
@@ -128,6 +131,21 @@ public final class Game extends PersistableGameObject {
      */
     public void setName(final String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the weaponLocations
+     */
+    public Map<Weapon, Room> getWeaponLocations() {
+        return weaponLocations;
+    }
+
+    /**
+     * @param weaponLocations
+     *            the weaponLocations to set
+     */
+    public void setWeaponLocations(final Map<Weapon, Room> weaponLocations) {
+        this.weaponLocations = weaponLocations;
     }
 
     /**

@@ -14,6 +14,8 @@
     href="<c:url value="/resources/css/clueless.css" />" />
 <link rel="stylesheet" type="text/css"
     href="<c:url value="/resources/css/bootstrap.min.css" />" />
+<script src="<c:url value="/resources/js/jquery-3.1.1.min.js" />"></script>
+<script src="<c:url value="/resources/js/bootstrap.min.js" />"></script>
 </head>
 <body>
     <div class="container">
@@ -48,6 +50,26 @@
                 <!--/.nav-collapse -->
             </div>
         </nav>
+        <!-- Modal -->
+        <div class="modal fade" id="tbkModal" tabindex="-1" role="dialog"
+            aria-labelledby="tbkModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"
+                            data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="tbkModalLabel">&nbsp;</h4>
+                    </div>
+                    <div class="modal-body" id="tbkModalBody">&nbsp;</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                            data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <sec:authorize access="isAuthenticated()">
             <form id="logoutform" action="<c:url value="/logout" />"
                 method="post">

@@ -52,6 +52,7 @@ public final class GameController {
     public String gameBoard(@RequestParam(value = "gameid") final long gameId, final Model model,
             final Principal principal) throws GameNotFoundException, InvalidGameStateException {
         Game game = gameService.getGame(gameId, principal.getName());
+        model.addAttribute("user", principal.getName());
         model.addAttribute("game", game);
         return "game";
     }

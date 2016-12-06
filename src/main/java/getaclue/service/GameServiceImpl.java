@@ -154,4 +154,26 @@ public class GameServiceImpl implements GameService {
         return game;
     }
 
+    @Override
+    public Game getGame(final long gameId, final String username)
+            throws GameNotFoundException, InvalidGameStateException {
+        // Make sure the game exists
+        Game game = gameRepository.findOne(gameId);
+        if (game == null) {
+            throw new GameNotFoundException();
+        }
+        // Make sure the user is part of this game
+        boolean joined = false;
+        for (Player player : game.getPlayers()) {
+            if (player.getUsername().equals(username)) {
+                joined = true;
+                break;
+            }
+        }
+        if (!joined) {
+            throw new InvalidGameStateException("You are not a member of this game");
+        }
+        return game;
+    }
+
 }

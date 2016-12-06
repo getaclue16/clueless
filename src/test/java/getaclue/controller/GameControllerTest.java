@@ -5,10 +5,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import java.util.List;
 
 import org.junit.Before;
@@ -75,7 +75,7 @@ public class GameControllerTest {
     public void testCreateGame() throws Exception {
         String gameName = "newGame";
         MvcResult result = mvc
-                .perform(get("/game/create").param("name", gameName)
+                .perform(post("/game/create").with(csrf()).param("name", gameName)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated()).andReturn();
 
@@ -86,8 +86,8 @@ public class GameControllerTest {
         assertNull(game.getSolution());
         assertTrue(game.getState().equals(State.NEW));
 
-        mvc.perform(get("/game/create").param("name", gameName).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+        mvc.perform(post("/game/create").with(csrf()).param("name", gameName)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
     }
 
     /**
@@ -139,8 +139,9 @@ public class GameControllerTest {
         Game game = gameService.newGame(null, player1);
 
         // Join the game
-        MvcResult result = mvc.perform(get("/game/join").param("gameid", game.getId().toString())
-                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+        MvcResult result = mvc.perform(post("/game/join").with(csrf())
+                .param("gameid", game.getId().toString()).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
         Game joinedGame = objectMapper.readerFor(Game.class)
                 .readValue(result.getResponse().getContentAsString());
         assertEquals(game.getId(), joinedGame.getId());
@@ -149,25 +150,26 @@ public class GameControllerTest {
         assertEquals("user", joinedGame.getPlayers().get(1).getUsername());
 
         // Attempt to join the same game again
-        mvc.perform(get("/game/join").param("gameid", game.getId().toString())
+        mvc.perform(post("/game/join").with(csrf()).param("gameid", game.getId().toString())
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
-                .andExpect(content().string("Unable to join game"));
+                .andExpect(content().string("You have already joined this game"));
 
         // Attempt to join a full game
         game = getFullGame();
-        mvc.perform(get("/game/join").param("gameid", game.getId().toString())
+        mvc.perform(post("/game/join").with(csrf()).param("gameid", game.getId().toString())
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
-                .andExpect(content().string("Unable to join game"));
+                .andExpect(content().string("The selected game is full"));
 
         // Attempt to join invalid game id
-        mvc.perform(get("/game/join").param("gameid", "999").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest()).andExpect(content().string("Invalid game id"));
+        mvc.perform(post("/game/join").with(csrf()).param("gameid", "999")
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(content().string("Invalid game id"));
 
         // Attempt to join a game that has already started
         game = getStartedGame();
-        mvc.perform(get("/game/join").param("gameid", game.getId().toString())
+        mvc.perform(post("/game/join").with(csrf()).param("gameid", game.getId().toString())
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
-                .andExpect(content().string("Unable to join game"));
+                .andExpect(content().string("The selected game has already started"));
     }
 
     /**
@@ -181,14 +183,15 @@ public class GameControllerTest {
     public void testStartGame() throws Exception {
         // Try to start the game with only one player
         Game game = gameService.newGame(null, "user");
-        mvc.perform(get("/game/start").param("gameid", game.getId().toString())
+        mvc.perform(post("/game/start").with(csrf()).param("gameid", game.getId().toString())
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
                 .andExpect(content().string("Unable to start game"));
 
         // Add a second player and successfully start the game
         gameService.joinGame(game.getId(), player1);
-        MvcResult result = mvc.perform(get("/game/start").param("gameid", game.getId().toString())
-                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+        MvcResult result = mvc.perform(post("/game/start").with(csrf())
+                .param("gameid", game.getId().toString()).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
         Game startedGame = objectMapper.readerFor(Game.class)
                 .readValue(result.getResponse().getContentAsString());
         assertEquals(game.getId(), startedGame.getId());
@@ -210,17 +213,20 @@ public class GameControllerTest {
         assertEquals(firstPlayer, startedGame.getTurns().get(0).getPlayer());
 
         // Try to start the game again, even though it is already started
-        mvc.perform(get("/game/start").param("gameid", game.getId().toString())
+        mvc.perform(post("/game/start").with(csrf()).param("gameid", game.getId().toString())
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
                 .andExpect(content().string("Unable to start game"));
 
         // Try to start an invalid game id
-        mvc.perform(get("/game/start").param("gameid", "999").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest()).andExpect(content().string("Invalid game id"));
+        mvc.perform(post("/game/start").with(csrf()).param("gameid", "999")
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(content().string("Invalid game id"));
 
         // Try to start a game created by someone else
-        mvc.perform(get("/game/start").param("gameid", getFullGame().getId().toString())
-                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
+        mvc.perform(
+                post("/game/start").with(csrf()).param("gameid", getFullGame().getId().toString())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict())
                 .andExpect(content().string("Unable to start game"));
 
     }

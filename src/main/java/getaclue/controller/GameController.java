@@ -8,9 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import getaclue.domain.Game;
 import getaclue.service.GameNotFoundException;
@@ -20,7 +24,7 @@ import getaclue.service.InvalidGameStateException;
 /**
  * REST controller for game setup.
  */
-@RestController
+@Controller
 @RequestMapping("/game")
 public final class GameController {
 
@@ -30,17 +34,39 @@ public final class GameController {
     private GameService gameService;
 
     /**
+     * Get the game board.
+     *
+     * @param gameId
+     *            the id of the game to return
+     * @param model
+     *            the model
+     * @param principal
+     *            the user who requested the game
+     * @return the base game board
+     * @throws GameNotFoundException
+     *             an invalid game id was provided
+     * @throws InvalidGameStateException
+     *             the player is not a member of this game
+     */
+    @GetMapping()
+    public String gameBoard(@RequestParam(value = "gameid") final long gameId, final Model model,
+            final Principal principal) throws GameNotFoundException, InvalidGameStateException {
+        Game game = gameService.getGame(gameId, principal.getName());
+        model.addAttribute("game", game);
+        return "game";
+    }
+
+    /**
      * Create a new game.
      *
      * @param name
-     *            the name of the new game (optional)
+     *            the name of the new game
      * @param principal
      *            the user who requested to create the game
      * @return the new game
      */
-    @RequestMapping("/create")
-    public ResponseEntity<Game> createGame(
-            @RequestParam(value = "name", required = false) final String name,
+    @PostMapping("/create")
+    public ResponseEntity<Game> createGame(@RequestParam final String name,
             final Principal principal) {
         Game game = gameService.newGame(name, principal.getName());
         return new ResponseEntity<Game>(game, HttpStatus.CREATED);
@@ -51,7 +77,8 @@ public final class GameController {
      *
      * @return a list of all open games
      */
-    @RequestMapping("/open")
+    @GetMapping("/open")
+    @ResponseBody
     public Collection<Game> openGames() {
         return gameService.getNewGames();
     }
@@ -66,7 +93,7 @@ public final class GameController {
      * @return the game that has been joined or an error message if the action
      *         failed
      */
-    @RequestMapping("/join")
+    @PostMapping("/join")
     public ResponseEntity<?> joinGame(@RequestParam(value = "gameid") final long gameId,
             final Principal principal) {
         Game game;
@@ -92,7 +119,7 @@ public final class GameController {
      * @return the game that has been started or an error message if the action
      *         failed
      */
-    @RequestMapping("/start")
+    @PostMapping("/start")
     public ResponseEntity<?> startGame(@RequestParam(value = "gameid") final long gameId,
             final Principal principal) {
         Game game;

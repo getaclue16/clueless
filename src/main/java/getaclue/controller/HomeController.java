@@ -91,14 +91,4 @@ public class HomeController {
         return "redirect:/";
     }
 
-    /**
-     * Get the game board.
-     *
-     * @return the base game board
-     */
-    @GetMapping("/game")
-    public final String gameBoard() {
-        return "game";
-    }
-
 }

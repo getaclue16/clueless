@@ -59,4 +59,20 @@ public interface GameService {
     Game startGame(long gameId, String username)
             throws GameNotFoundException, InvalidGameStateException;
 
+    /**
+     * Retrieve a game.
+     *
+     * @param gameId
+     *            the id of the game to retrieve
+     * @param username
+     *            the user requesting the game
+     * @return the game
+     * @throws GameNotFoundException
+     *             no game with the given id exists
+     * @throws InvalidGameStateException
+     *             this player is not a member of this game
+     */
+    Game getGame(long gameId, String username)
+            throws GameNotFoundException, InvalidGameStateException;
+
 }

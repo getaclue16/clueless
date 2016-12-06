@@ -140,10 +140,10 @@ public class GameServiceImpl implements GameService {
         }
 
         // Place the weapons
-        Map<Weapon,Room> weaponLocations = new HashMap<>();
+        Map<Weapon, Room> weaponLocations = new HashMap<>();
         List<Room> rooms = new ArrayList<>(Arrays.asList(Room.values()));
         Collections.shuffle(rooms);
-        for(int i = 0; i < Weapon.values().length; i++) {
+        for (int i = 0; i < Weapon.values().length; i++) {
             weaponLocations.put(Weapon.values()[i], rooms.get(i));
         }
         game.setWeaponLocations(weaponLocations);

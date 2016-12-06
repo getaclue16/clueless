@@ -99,17 +99,17 @@ public class ActionServiceImpl implements ActionService {
         Turn turn = game.getTurns().get(game.getTurns().size() - 1);
         if (turn.getActions().size() == 0) {
             if (!player.isForcedToMove()) {
-                throw new InvalidGameStateException("You must move before making a guess");
+                throw new InvalidGameStateException("You must move before making a suggestion");
             }
             player.setForcedToMove(false);
         }
         // Has a guess already been made?
         if (turn.getActions().size() > 1) {
-            throw new InvalidGameStateException("You have already made a guess this turn");
+            throw new InvalidGameStateException("You have already made a suggestion this turn");
         }
         // Is the user in a room?
         if (player.getCurrentLocation().isHall()) {
-            throw new InvalidGameStateException("You must be in a room to make a guess");
+            throw new InvalidGameStateException("You must be in a room to make a suggestion");
         }
         Solution solution = new Solution(guest, weapon, player.getCurrentLocation().toRoom());
         Guess guess = new Guess(ZonedDateTime.now(), solution);
@@ -132,6 +132,9 @@ public class ActionServiceImpl implements ActionService {
                 }
             }
         }
+
+        // Move the weapon to the location
+        game.getWeaponLocations().put(weapon, player.getCurrentLocation().toRoom());
 
         // Record the action
         gameRepository.save(game);

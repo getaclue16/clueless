@@ -9,7 +9,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${param.title}-TheBee'sKnees</title>
+<title><c:out value="${param.title}" /> - The Bee's Knees</title>
 <link rel="stylesheet" type="text/css"
     href="<c:url value="/resources/css/clueless.css" />" />
 <link rel="stylesheet" type="text/css"
@@ -51,8 +51,8 @@
             </div>
         </nav>
         <!-- Modal -->
-        <div class="modal fade" id="tbkModal" tabindex="-1" role="dialog"
-            aria-labelledby="tbkModalLabel">
+        <div class="modal fade" id="tbkModal" tabindex="-1"
+            role="dialog" aria-labelledby="tbkModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">

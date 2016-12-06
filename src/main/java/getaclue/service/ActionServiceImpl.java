@@ -58,8 +58,8 @@ public class ActionServiceImpl implements ActionService {
         }
         // Make sure the move is legal
         if (!Location.isValidMove(player.getCurrentLocation(), moveto)) {
-            throw new InvalidGameStateException(String.format("It is invalid to move from %s to %s",
-                    player.getCurrentLocation(), moveto));
+            throw new InvalidGameStateException(
+                    String.format("That is not a valid move", player.getCurrentLocation(), moveto));
         }
         // If the target is a hall, make sure it is empty
         if (moveto.isHall()) {

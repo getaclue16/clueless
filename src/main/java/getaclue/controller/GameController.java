@@ -77,7 +77,7 @@ public final class GameController {
             return new ResponseEntity<String>("Invalid game id", HttpStatus.BAD_REQUEST);
         } catch (InvalidGameStateException e) {
             log.warn("User could not join game", e);
-            return new ResponseEntity<String>("Unable to join game", HttpStatus.CONFLICT);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
         }
         return new ResponseEntity<Game>(game, HttpStatus.OK);
     }

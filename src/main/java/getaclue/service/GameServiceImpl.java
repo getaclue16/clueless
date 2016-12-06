@@ -74,16 +74,16 @@ public class GameServiceImpl implements GameService {
         }
         // Make sure the game has not started yet
         if (game.getState() != State.NEW) {
-            throw new InvalidGameStateException("Game has already started");
+            throw new InvalidGameStateException("The selected game has already started");
         }
         // Make sure the game isn't already full
         if (game.getPlayers().size() >= MAX_PLAYERS) {
-            throw new InvalidGameStateException("Game is full");
+            throw new InvalidGameStateException("The selected game is full");
         }
         // Make sure the user isn't already in the game
         for (Player player : game.getPlayers()) {
             if (player.getUsername().equals(username)) {
-                throw new InvalidGameStateException("User already joined game");
+                throw new InvalidGameStateException("You have already joined this game");
             }
         }
         game.getPlayers().add(new Player(username));

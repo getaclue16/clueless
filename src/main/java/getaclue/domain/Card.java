@@ -75,4 +75,12 @@ public final class Card extends PersistableGameObject {
         this.name = name;
     }
 
+    /**
+     * Get the name in lowercase with all non-word characters removed.
+     *
+     * @return the short name
+     */
+    public String getShortName() {
+        return name.replaceAll("[\\W]", "").toLowerCase();
+    }
 }

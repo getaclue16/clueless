@@ -18,13 +18,23 @@ $(document).ready(function() {
         $.post("/game/action/move", {
             _csrf : $("input[name=_csrf]").val(),
             gameid : getGameId(),
-            x: x,
-            y: y
+            x : x,
+            y : y
         }, function(data) {
             // TODO: the move was successful
         }).fail(function(error) {
             showError(error);
         });
+    });
+
+    // User clicked the guess button
+    $("#suggest").click(function() {
+        $("#suggestModal").modal("show");
+    });
+
+    // User clicked the accuse button
+    $("#accuse").click(function() {
+        $("#accuseModal").modal("show");
     });
 
     // User clicked the end turn button
@@ -58,11 +68,15 @@ $(document).ready(function() {
             setTimeout(function() {
                 window.location.reload(1);
             }, 10000);
-        } else if ($("#gamestatus").attr("data-gamestate") === "COMPLETE") {
-            // Game is complete, disable the controls
+        } else {
+            $.get("/game/load", {
+                gameid : getGameId()
+            }, function(data) {
+                // TODO: end turn was successful
+            }).fail(function(error) {
+                showError(error);
+            });
         }
-        var gameid = getGameId();
-        // TODO:
     }
     loadGame();
 });

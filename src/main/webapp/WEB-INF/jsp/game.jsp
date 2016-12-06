@@ -3,12 +3,116 @@
 <jsp:include page="head.jsp">
     <jsp:param name="title" value="${game.name}" />
 </jsp:include>
+<!-- Suggest Modal -->
+<div class="modal fade" id="suggestModal" tabindex="-1" role="dialog"
+    aria-labelledby="suggestModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="suggestModalLabel">Make
+                    A Suggestion</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="selGuest">Guest:</label> <select
+                        class="form-control" id="selGuest" name="guest">
+                        <c:forEach items="${guests}" var="guest">
+                            <option value="<c:out value="${guest}"/>"><c:out
+                                    value="${guest.name}" /></option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="selGuest">Weapon:</label> <select
+                        class="form-control text-capitalize"
+                        id="selWeapon" name="weapon">
+                        <c:forEach items="${weapons}" var="weapon">
+                            <option class=""
+                                value="<c:out value="${weapon}"/>"><c:out
+                                    value="${weapon.name}" /></option>
+                        </c:forEach>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary"
+                    id="submitSuggestion">Submit Suggestion</button>
+                <button type="button" class="btn btn-default"
+                    data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Accuse Modal -->
+<div class="modal fade" id="accuseModal" tabindex="-1" role="dialog"
+    aria-labelledby="accuseModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="accuseModalLabel">Make
+                    An Accusation</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="selGuest">Guest:</label> <select
+                        class="form-control" id="selGuest" name="guest">
+                        <c:forEach items="${guests}" var="guest">
+                            <option value="<c:out value="${guest}"/>"><c:out
+                                    value="${guest.name}" /></option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="selWeapon">Weapon:</label> <select
+                        class="form-control text-capitalize"
+                        id="selWeapon" name="weapon">
+                        <c:forEach items="${weapons}" var="weapon">
+                            <option class=""
+                                value="<c:out value="${weapon}"/>"><c:out
+                                    value="${weapon.name}" /></option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="selRoom">Room:</label> <select
+                        class="form-control text-capitalize"
+                        id="selRoom" name="room">
+                        <c:forEach items="${rooms}" var="room">
+                            <option class=""
+                                value="<c:out value="${room}"/>"><c:out
+                                    value="${room.name}" /></option>
+                        </c:forEach>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary"
+                    id="submitAccusation">Submit Accusation</button>
+                <button type="button" class="btn btn-default"
+                    data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="text-center">
     <table class="gameboard" data-gameid="${game.id}" id="gameboard">
         <tr>
             <td colspan="4">&nbsp;</td>
             <td class="start" id="startscarlet"><span>Miss
-                    Scarlet </span>start</td>
+                    Scarlet </span>start
+                <div class="guest" id="missscarlet">
+                    <span class="sr-only">Miss Scarlet</span>&nbsp;
+                </div></td>
             <td colspan="2">&nbsp;</td>
         </tr>
         <tr>
@@ -95,7 +199,7 @@
             <h2>Actions</h2>
             <div>
                 <br />
-                <button id="guess">Make Guess</button>
+                <button id="suggest">Suggest</button>
             </div>
             <div>
                 <br />

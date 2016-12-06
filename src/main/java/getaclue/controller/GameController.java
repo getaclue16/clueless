@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import getaclue.domain.Game;
+import getaclue.domain.Guest;
+import getaclue.domain.Room;
+import getaclue.domain.Weapon;
 import getaclue.service.GameNotFoundException;
 import getaclue.service.GameService;
 import getaclue.service.InvalidGameStateException;
@@ -54,7 +57,30 @@ public final class GameController {
         Game game = gameService.getGame(gameId, principal.getName());
         model.addAttribute("user", principal.getName());
         model.addAttribute("game", game);
+        model.addAttribute("weapons", Weapon.values());
+        model.addAttribute("rooms", Room.values());
+        model.addAttribute("guests", Guest.values());
         return "game";
+    }
+
+    /**
+     * Get the game board.
+     *
+     * @param gameId
+     *            the id of the game to return
+     * @param principal
+     *            the user who requested the game
+     * @return the game object
+     * @throws GameNotFoundException
+     *             an invalid game id was provided
+     * @throws InvalidGameStateException
+     *             the player is not a member of this game
+     */
+    @GetMapping("/load")
+    @ResponseBody
+    public Game getGame(@RequestParam(value = "gameid") final long gameId,
+            final Principal principal) throws GameNotFoundException, InvalidGameStateException {
+        return gameService.getGame(gameId, principal.getName());
     }
 
     /**

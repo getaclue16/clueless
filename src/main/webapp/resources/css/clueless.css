@@ -10,7 +10,6 @@
 
 .gameboard td {
     text-align: center;
-    position: relative;
 }
 
 .hallway {
@@ -57,13 +56,12 @@
 }
 
 .guest {
-    width: 10px;
-    height: 10px;
-    position: absolute;
-    bottom: 3px;
-    left: 3px;
-    border: 1px solid black;
-    border-radius: 5px;
+    float: left;
+    width: 15px;
+    height: 15px;
+    border: 2px solid black;
+    transform: rotate(45deg);
+    z-index: 100;
 }
 
 .card {
@@ -123,27 +121,27 @@
     background-image: url('../images/room-kitchen.png');
 }
 
-#startscarlet {
+#startscarlet, #scarlet {
     background-color: #ff2400
 }
 
-#startplum {
+#startplum, #plum {
     background-color: #8e4585
 }
 
-#startmustard {
+#startmustard, #mustard {
     background-color: #ffdb58
 }
 
-#startpeacock {
+#startpeacock, #peacock {
     background-color: #0954be
 }
 
-#startgreen {
+#startgreen, #green {
     background-color: #00b200
 }
 
-#startwhite {
+#startwhite, #white {
     background-color: #ffffff
 }
 

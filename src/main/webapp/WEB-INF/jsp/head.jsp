@@ -17,7 +17,7 @@
 <script src="<c:url value="/resources/js/jquery-3.1.1.min.js" />"></script>
 <script src="<c:url value="/resources/js/bootstrap.min.js" />"></script>
 </head>
-<body>
+<body data-user="<c:out value="${user}" />">
     <div class="container">
         <nav class="navbar navbar-default">
             <div class="container-fluid">

@@ -1,7 +1,9 @@
 package getaclue.domain;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.validation.constraints.NotNull;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -13,8 +15,10 @@ public final class Response extends Action {
 
     private static final long serialVersionUID = 4769697783164392715L;
 
-    @NotNull
+    @ManyToOne
+    @JoinColumn
     private Player player;
+    @Embedded
     @JsonIgnore
     private Card cardShown;
 

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 
@@ -15,10 +16,13 @@ public final class Solution extends PersistableGameObject {
     private static final long serialVersionUID = 1922443575218280274L;
 
     @NotNull
+    @Column(nullable = false)
     private Guest guest;
     @NotNull
+    @Column(nullable = false)
     private Weapon weapon;
     @NotNull
+    @Column(nullable = false)
     private Room room;
 
     /**
@@ -116,6 +120,12 @@ public final class Solution extends PersistableGameObject {
 
         Solution solution = new Solution(guests.get(0), weapons.get(0), rooms.get(0));
         return solution;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s in the %s with the %s", guest.getName(), room.getName(),
+                weapon.getName());
     }
 
 }

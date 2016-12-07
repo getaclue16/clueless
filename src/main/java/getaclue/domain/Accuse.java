@@ -50,4 +50,9 @@ public final class Accuse extends Action {
         this.solution = solution;
     }
 
+    @Override
+    public String getDescription() {
+        return String.format("Made an accusation: %s", solution.toString());
+    }
+
 }

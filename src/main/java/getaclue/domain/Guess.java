@@ -50,4 +50,9 @@ public final class Guess extends Action {
         this.solution = solution;
     }
 
+    @Override
+    public String getDescription() {
+        return String.format("Made a suggestion: %s", solution.toString());
+    }
+
 }

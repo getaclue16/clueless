@@ -63,8 +63,9 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="selGuest">Guest:</label> <select
-                        class="form-control" id="selGuest" name="guest">
+                    <label for="accuseGuest">Guest:</label> <select
+                        class="form-control" id="accuseGuest"
+                        name="guest">
                         <c:forEach items="${guests}" var="guest">
                             <option value="<c:out value="${guest}"/>"><c:out
                                     value="${guest.name}" /></option>
@@ -72,9 +73,9 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="selWeapon">Weapon:</label> <select
+                    <label for="accuseWeapon">Weapon:</label> <select
                         class="form-control text-capitalize"
-                        id="selWeapon" name="weapon">
+                        id="accuseWeapon" name="weapon">
                         <c:forEach items="${weapons}" var="weapon">
                             <option class=""
                                 value="<c:out value="${weapon}"/>"><c:out
@@ -83,9 +84,9 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="selRoom">Room:</label> <select
+                    <label for="accuseRoom">Room:</label> <select
                         class="form-control text-capitalize"
-                        id="selRoom" name="room">
+                        id="accuseRoom" name="room">
                         <c:forEach items="${rooms}" var="room">
                             <option class=""
                                 value="<c:out value="${room}"/>"><c:out
@@ -105,93 +106,103 @@
 </div>
 
 <div class="text-center">
-    <table class="gameboard" data-gameid="${game.id}" id="gameboard">
-        <tr>
-            <td colspan="4">&nbsp;</td>
-            <td class="start" id="startscarlet"><span>Miss
-                    Scarlet </span>start
-                <div class="guest" id="missscarlet">
-                    <span class="sr-only">Miss Scarlet</span>&nbsp;
-                </div></td>
-            <td colspan="2">&nbsp;</td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td class="room" id="study"><span class="roomname">Study</span></td>
-            <td class="hallway"><div class="hhall">&nbsp;</div></td>
-            <td class="room" id="hall"><span class="roomname">Hall</span></td>
-            <td class="hallway"><div class="hhall">&nbsp;</div></td>
-            <td class="room" id="lounge"><span class="roomname">Lounge</span></td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td class="start" id="startplum"><span>Prof.
-                    Plum </span>start</td>
-            <td class="hallway"><div class="vhall">&nbsp;</div></td>
-            <td class="void">&nbsp;</td>
-            <td class="hallway"><div class="vhall">&nbsp;</div></td>
-            <td class="void">&nbsp;</td>
-            <td class="hallway"><div class="vhall">&nbsp;</div></td>
-            <td class="start" id="startmustard"><span>Col.
-                    Mustard </span>start</td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td class="room" id="library"><span class="roomname">Library</span></td>
-            <td class="hallway"><div class="hhall">&nbsp;</div></td>
-            <td class="room" id="billiard"><span class="roomname">Billiard
-                    Room</span></td>
-            <td class="hallway"><div class="hhall">&nbsp;</div></td>
-            <td class="room" id="dining"><span class="roomname">Dining
-                    Room</span></td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td class="start" id="startpeacock"><span>Mrs.
-                    Peacock </span>start</td>
-            <td class="hallway"><div class="vhall">&nbsp;</div></td>
-            <td class="void">&nbsp;</td>
-            <td class="hallway"><div class="vhall">&nbsp;</div></td>
-            <td class="void">&nbsp;</td>
-            <td class="hallway"><div class="vhall">&nbsp;</div></td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td class="room" id="conservatory"><span
-                class="roomname">Conservatory</span></td>
-            <td class="hallway"><div class="hhall">&nbsp;</div></td>
-            <td class="room" id="ballroom"><span class="roomname">Ballroom</span></td>
-            <td class="hallway"><div class="hhall">&nbsp;</div></td>
-            <td class="room" id="kitchen"><span class="roomname">Kitchen</span></td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td colspan="2">&nbsp;</td>
-            <td class="start" id="startgreen"><span>Mr.
-                    Green </span>start</td>
-            <td>&nbsp;</td>
-            <td class="start" id="startwhite"><span>Mrs.
-                    White </span>start</td>
-            <td colspan="2">&nbsp;</td>
-        </tr>
-    </table>
-    <div id="gamestatus" data-gamestate="${game.state}">
-        <h2>Game Status</h2>
-        <c:if test="${game.state == 'NEW'}">
+    <div class="row">
+        <div class="col-sm-8 col-md-6 col-lg-5">
+            <table class="gameboard" data-gameid="${game.id}"
+                id="gameboard">
+                <tr>
+                    <td colspan="4">&nbsp;</td>
+                    <td class="start" id="startscarlet"><span>Miss
+                            Scarlet </span>start
+                        <div class="guest" id="missscarlet">
+                            <span class="sr-only">Miss Scarlet</span>&nbsp;
+                        </div></td>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td class="room" id="study"><span
+                        class="roomname">Study</span></td>
+                    <td class="hallway"><div class="hhall">&nbsp;</div></td>
+                    <td class="room" id="hall"><span
+                        class="roomname">Hall</span></td>
+                    <td class="hallway"><div class="hhall">&nbsp;</div></td>
+                    <td class="room" id="lounge"><span
+                        class="roomname">Lounge</span></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="start" id="startplum"><span>Prof.
+                            Plum </span>start</td>
+                    <td class="hallway"><div class="vhall">&nbsp;</div></td>
+                    <td class="void">&nbsp;</td>
+                    <td class="hallway"><div class="vhall">&nbsp;</div></td>
+                    <td class="void">&nbsp;</td>
+                    <td class="hallway"><div class="vhall">&nbsp;</div></td>
+                    <td class="start" id="startmustard"><span>Col.
+                            Mustard </span>start</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td class="room" id="library"><span
+                        class="roomname">Library</span></td>
+                    <td class="hallway"><div class="hhall">&nbsp;</div></td>
+                    <td class="room" id="billiard"><span
+                        class="roomname">Billiard Room</span></td>
+                    <td class="hallway"><div class="hhall">&nbsp;</div></td>
+                    <td class="room" id="dining"><span
+                        class="roomname">Dining Room</span></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="start" id="startpeacock"><span>Mrs.
+                            Peacock </span>start</td>
+                    <td class="hallway"><div class="vhall">&nbsp;</div></td>
+                    <td class="void">&nbsp;</td>
+                    <td class="hallway"><div class="vhall">&nbsp;</div></td>
+                    <td class="void">&nbsp;</td>
+                    <td class="hallway"><div class="vhall">&nbsp;</div></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td class="room" id="conservatory"><span
+                        class="roomname">Conservatory</span></td>
+                    <td class="hallway"><div class="hhall">&nbsp;</div></td>
+                    <td class="room" id="ballroom"><span
+                        class="roomname">Ballroom</span></td>
+                    <td class="hallway"><div class="hhall">&nbsp;</div></td>
+                    <td class="room" id="kitchen"><span
+                        class="roomname">Kitchen</span></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                    <td class="start" id="startgreen"><span>Mr.
+                            Green </span>start</td>
+                    <td>&nbsp;</td>
+                    <td class="start" id="startwhite"><span>Mrs.
+                            White </span>start</td>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-sm-4 col-md-6 col-lg-7"
+            style="max-height: 460px; overflow: scroll;">
+            <h2>Action Log</h2>
+            <div id="gamestatus" data-gamestate="${game.state}">
+                <c:if test="${game.state == 'NEW'}">
             Game has not started. There are currently ${fn:length(game.players)} players joined.
             <c:if
-                test="${game.players[0].username == user && fn:length(game.players) >= 3}">
-                <div>
-                    <br />
-                    <button id="start-game">Start Game</button>
-                </div>
-            </c:if>
-        </c:if>
-        <c:if test="${game.state == 'IN_PROGRESS'}">
-            Game is in progress. It is <c:out
-                value="${game.activePlayer.guest.name}" />'s turn.
-        </c:if>
+                        test="${game.players[0].username == user && fn:length(game.players) >= 3}">
+                        <div>
+                            <br />
+                            <button id="start-game">Start Game</button>
+                        </div>
+                    </c:if>
+                </c:if>
+            </div>
+        </div>
     </div>
     <br />
     <div>

@@ -5,7 +5,6 @@ import java.time.ZonedDateTime;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -16,9 +15,6 @@ import javax.validation.constraints.NotNull;
 public abstract class Action extends PersistableGameObject {
 
     private static final long serialVersionUID = -3260240631142109482L;
-
-    @ManyToOne
-    private Turn turn;
 
     @NotNull
     private ZonedDateTime timestamp;
@@ -40,21 +36,6 @@ public abstract class Action extends PersistableGameObject {
     }
 
     /**
-     * @return the turn
-     */
-    public final Turn getTurn() {
-        return turn;
-    }
-
-    /**
-     * @param turn
-     *            the turn to set
-     */
-    public final void setTurn(final Turn turn) {
-        this.turn = turn;
-    }
-
-    /**
      * @return the timestamp
      */
     public final ZonedDateTime getTimestamp() {
@@ -68,5 +49,12 @@ public abstract class Action extends PersistableGameObject {
     public final void setTimestamp(final ZonedDateTime timestamp) {
         this.timestamp = timestamp;
     }
+
+    /**
+     * Get a description of this action.
+     *
+     * @return a description of this action
+     */
+    public abstract String getDescription();
 
 }

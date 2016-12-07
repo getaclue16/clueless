@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -33,7 +34,7 @@ public final class Game extends PersistableGameObject {
     private List<Player> players;
     @OneToMany(cascade = CascadeType.ALL)
     private List<NonPlayer> nonPlayers;
-    @Embedded
+    @ElementCollection
     private Map<Weapon, Room> weaponLocations;
     private State state = State.NEW;
 

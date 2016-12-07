@@ -5,7 +5,6 @@
 
 .gameboard {
     border-collapse: collapse;
-    float: left;
     font-size: small;
 }
 

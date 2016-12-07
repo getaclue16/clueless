@@ -3,6 +3,8 @@ package getaclue.domain;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * A response to a guess.
  */
@@ -13,6 +15,7 @@ public final class Response extends Action {
 
     @NotNull
     private Player player;
+    @JsonIgnore
     private Card cardShown;
 
     /**
@@ -43,6 +46,14 @@ public final class Response extends Action {
      */
     public void setCardShown(final Card cardShown) {
         this.cardShown = cardShown;
+    }
+
+    @Override
+    public String getDescription() {
+        if (cardShown == null) {
+            return String.format("%s did not show any cards", player.getGuest().getName());
+        }
+        return String.format("%s showed a card", player.getGuest().getName());
     }
 
 }

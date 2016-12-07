@@ -74,6 +74,7 @@ public class ActionServiceImpl implements ActionService {
         move.setFromLocation(player.getCurrentLocation());
         move.setToLocation(moveto);
         turn.addAction(move);
+        player.setCurrentLocation(moveto);
         player.setForcedToMove(false);
         gameRepository.save(game);
     }

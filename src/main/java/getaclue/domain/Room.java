@@ -23,11 +23,11 @@ public enum Room {
     /**
      * The Billiard Room.
      */
-    BILLIARD("Billiard Room", 2, 2),
+    BILLIARDROOM("Billiard Room", 2, 2),
     /**
      * The Dining Room.
      */
-    DINING("Dining Room", 4, 2),
+    DININGROOM("Dining Room", 4, 2),
     /**
      * The Conservatory.
      */

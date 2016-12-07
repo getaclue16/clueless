@@ -53,4 +53,24 @@ public final class Move extends Action {
         this.toLocation = toLocation;
     }
 
+    @Override
+    public String getDescription() {
+        // Moved from a room to a hall
+        if (toLocation.isHall()) {
+            Room room = fromLocation.toRoom();
+            // The first turn will not start in a room
+            if (room == null) {
+                return "Moved from the starting location to a hallway";
+            }
+            return String.format("Moved from the %s to a hallway", room.getName());
+        }
+        // Moved from a hall to a room
+        if (fromLocation.isHall()) {
+            return String.format("Moved from a hallway to the %s", toLocation.toRoom().getName());
+        }
+        // Moved through a shortcut
+        return String.format("Took a shortcut from the %s to the %s",
+                fromLocation.toRoom().getName(), toLocation.toRoom().getName());
+    }
+
 }

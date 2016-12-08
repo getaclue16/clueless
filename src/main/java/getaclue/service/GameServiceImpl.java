@@ -76,6 +76,12 @@ public class GameServiceImpl implements GameService {
         if (game == null) {
             throw new GameNotFoundException();
         }
+        // If the user has already joined the game, just return the game
+        for (Player player : game.getPlayers()) {
+            if (player.getUsername().equals(username)) {
+                return game;
+            }
+        }
         // Make sure the game has not started yet
         if (game.getState() != State.NEW) {
             throw new InvalidGameStateException("The selected game has already started");
@@ -83,12 +89,6 @@ public class GameServiceImpl implements GameService {
         // Make sure the game isn't already full
         if (game.getPlayers().size() >= MAX_PLAYERS) {
             throw new InvalidGameStateException("The selected game is full");
-        }
-        // Make sure the user isn't already in the game
-        for (Player player : game.getPlayers()) {
-            if (player.getUsername().equals(username)) {
-                throw new InvalidGameStateException("You have already joined this game");
-            }
         }
         game.getPlayers().add(new Player(username));
         gameRepository.save(game);

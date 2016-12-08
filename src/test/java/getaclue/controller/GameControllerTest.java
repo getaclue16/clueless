@@ -151,8 +151,7 @@ public class GameControllerTest {
 
         // Attempt to join the same game again
         mvc.perform(post("/game/join").with(csrf()).param("gameid", game.getId().toString())
-                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isConflict())
-                .andExpect(content().string("You have already joined this game"));
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
         // Attempt to join a full game
         game = getFullGame();
